@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# This script will copy into clipboard what written in enterybox, very useful to avoid typing in mobile! :P
+# Rushyang Darji
+# Fcuk, I'm awesome!  :D
+
+export PATH=${PATH}:"/home/rushyang/android-sdk-linux_x86/platform-tools/"
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+copythis=`zenity --entry --text="Enter the string: " --title="Initiating Copy into clipboard of Android Device script.." --width=600`
+adb shell service call clipboard 2 i32 1 i32 0 s16 "$copythis" 1>"$temp" 2>&1
+zenity --text-info --filename="$temp" --title="Log for $copythis" --width=600 --height=600 --timeout=1

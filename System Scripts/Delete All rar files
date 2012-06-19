@@ -1,0 +1,14 @@
+#!/bin/bash
+# From Rushyang Darji
+# Initial Build: 01.04.2011
+# Last Updated on: 01.04.2011
+zenity --question --text="Are you sure, You want to DELETE PERMANENTLY all rar files from Current Working Directory?"
+choice=$?
+
+[[ "$choice" -eq 1 ]] && exit
+
+rm *.rar
+exitstatus=$?
+[[ "$exitstatus" -eq 0 ]] && zenity --info --text="All .rar files has been deleted successfully!" && exit
+
+zenity --info --text="Some Error occured!"

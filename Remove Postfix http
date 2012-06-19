@@ -1,0 +1,11 @@
+#!/bin/bash
+
+rmr='.http'
+for i in *
+do
+	if [[ -f "$i" ]]; then
+		fn=${i%"$rmr"}
+		mv "$i" "$fn"
+	fi
+done
+
