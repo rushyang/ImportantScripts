@@ -1,0 +1,22 @@
+#!/bin/bash
+#Rushyang Darji
+#Initial Build: 10th Feb, 2012
+
+export PATH=${PATH}:"/home/rushyang/android-sdk-linux_x86/platform-tools/"
+counter=`echo "$NAUTILUS_SCRIPT_SELECTED_URIS" | grep '^file://' | wc -l`
+if [[ "$counter" -gt 1 ]]; then
+	notify-send "Please select one file @one tme!" -i gtk-dialog-error
+	exit
+fi
+apkf="`echo $NAUTILUS_SCRIPT_SELECTED_URIS | cut -d'/' -f3- | sed 's/%20/ /g'`"
+
+if [[ "$apkf" != *.apk ]]; then
+	notify-send "Really? Is that an \"APK\" file?" -i gtk-dialog-error
+	exit
+fi
+
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+adb install "$apkf"  1>>"$temp" 2>&1
+disp=`cat "$temp" | tail -n1`
+notify-send "$disp"'!' -i gtk-dialog-info

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# From: Rushyang Darji
+
+word=`zenity --entry --entry-text="class" --text="Which group of files do you want to delete?" --title="Multiple Homogeneous Deletion"`
+
+[[ -z "$word" ]] && exit
+rm *"$word"

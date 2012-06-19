@@ -1,0 +1,41 @@
+#!/bin/bash
+#Rushyang Darji
+#Initial Build: 29th Feb, 2012
+#Updated to multiple select and push: 4th May, 2012
+dirpath='/home/rushyang/.autoscripts/PushLogDir/'
+today=`date +%d%b%Y`
+path="$dirpath/$today"
+echo '***New Push task started*** at'`date +%I:%M:%S`>> "$path"
+export PATH=${PATH}:"/home/rushyang/android-sdk-linux_x86/platform-tools/"
+#counter=`echo "$NAUTILUS_SCRIPT_SELECTED_URIS" | grep '^file://' | wc -l`
+#if [[ "$counter" -gt 1 ]]; then
+#	notify-send "Please select one file @ one tme!" -i gtk-dialog-error
+#	exit
+#fi
+
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+loc=`zenity --entry --text='Enter the location of directory in your android device:' --entry-text='/sdcard/'  --height=150 --width=600 --title="Push into connected android device through ADB"`
+if [[ "$loc" = '' ]]; then
+	zenity --error --text='Target path is empty. The script will now exit.' --no-wrap --timeout="3"
+	exit
+fi
+if [[ ! -z $NAUTILUS_SCRIPT_SELECTED_URIS ]]; then
+	for uri in $NAUTILUS_SCRIPT_SELECTED_URIS ; do
+		apkf="`echo $uri | cut -d'/' -f3- | sed 's/%20/ /g'`"
+		#zenity --info --text "$apkf" --no-wrap
+		apkf2=`basename "$apkf"`
+		#zenity --info --text "$apkf2" --no-wrap
+		echo -n "$uri" " :   ">> "$temp"
+		adb -d push "$apkf2" "$loc" 1>>"$temp" 2>&1  
+	done
+fi
+
+zenity --text-info --filename="$temp" --title="Push log..." --width=600 --height=600
+cat "$temp" >> "$path"
+#disp=`cat "$temp" | tail -n1`
+#base=`basename "$apkf"`
+#echo "$base" "$disp" >> "$path"
+#cat "$temp" >> "$path"
+#notify-send 'file: '"$base"'**'"$disp"'!' -i gtk-dialog-info
+echo '"***Push task ended*** at'`date +%I:%M:%S` >> "$path"

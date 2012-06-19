@@ -1,0 +1,9 @@
+#!/bin/sh
+### openas-root:
+###   nautilus script for opening the selected files as superuser (uid=0),
+###   utilizing the appropriate applications.
+
+for uri in $NAUTILUS_SCRIPT_SELECTED_URIS; do
+	gksudo "gnome-open $uri" &
+done
+### end of file.

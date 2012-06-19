@@ -1,0 +1,18 @@
+#!/bin/bash
+#gnome-terminal --working-directory=$NAUTILUS_SCRIPT_SELECTED_URIS &
+#for uri in $NAUTILUS_SCRIPT_SELECTED_URIS; do
+#	gnome-terminal --working-directory=$(uri) &
+#done
+
+base="`echo $NAUTILUS_SCRIPT_CURRENT_URI | cut -d'/' -f3- | sed 's/%20/ /g'`"
+if [ -z "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" ]; then
+dir="$base"
+else
+while [ ! -z "$1" -a ! -d "$base/$1" ]; do shift; done
+dir="$base/$1"
+fi
+
+gnome-terminal --working-directory="$dir"
+
+
+

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#From Rushyang Darji
+# For removing multiple prefix pattern
+# This is cause of most stupid OS: "Windows" of course. Windows does not allow spaces at the end of directory or filename. While such directories/files are created through linux, windows just can't access them. 
+# This script will remove last space (if exists) from file/directoy present into current directory.
+#targetchar=`zenity --entry --text='Enter the exact word(s) of a file of beginning:' --entry-text='Link to ' --height=150 --width=400 --title="Remove matching prefix pattern"`
+
+targetchar=' '
+for i in *
+do
+		lastchar=${i: -1:1}
+		if [[ "$lastchar" = " " ]]; then
+			fn=${i%"$targetchar"}
+			zenity --info --text="Renaming to...\"$fn\""
+			mv "$i" "$fn"
+		fi
+
+done

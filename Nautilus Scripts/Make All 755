@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# This script will make all file persmission 755
+
+temp=$(mktemp)
+trap "rm $temp" 0 1 2 
+chmod 755 * 2>"$temp"
+[[ ! -s "$temp" ]] && exit
+ls -l >> "$temp"
+[[ -s "$temp" ]] && zenity --text-info --filename="$temp" --title="Error log for task 755" --timeout=20 --width=600 --height=600

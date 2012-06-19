@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#From Rushyang Darji
+# For removing multiple prefix pattern
+# I created this script because, I use too many softlinks through context menu of nautilus.. and I hated their names starting with "Link to "
+pword=`zenity --entry --text='Enter the exact word(s) of a file of beginning:' --entry-text='Link to ' --height=150 --width=400 --title="Remove matching prefix pattern"`
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+for i in *
+do
+	#if [[ -f "$i" ]]; then
+		fn=${i%"$pword"}
+		mv "$i" "$fn"  2>$temp
+	#fi
+done
+
+if [[ -s "$temp" ]]; then
+	zenity --text-info --filename="$temp" --title="Error log for script \"Remove Matching Prefix Pattern\"" --width=600 --height=600
+fi

@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Nautilus script -> jd-gui
+#
+# Add multiple files jd-gui application
+#
+# Author:  Ilya Kharmatsky aka jshark
+# Version: 0.0.0.1 
+# Date:    26.01.2010
+#
+
+debug=1
+
+jd_gui_path=/usr/bin/jd-gui
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+filesall=`echo "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS"`
+
+if [ $debug -ne 0 ];
+then
+ echo $jd_gui_path "$filesall" > /tmp/jd_gui_nau_debug
+fi
+
+"$jd_gui_path" "$filesall" & 1>>"$temp" 2>&1
+
+[[ -s "$temp" ]] && zenity --text-info --filename="$temp" --title="Error log for $base" --width=600 --height=600

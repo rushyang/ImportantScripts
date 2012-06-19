@@ -1,0 +1,4 @@
+#!/bin/sh
+# By: Rushyang Darji
+
+echo -n $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS | xclip -selection clipboard

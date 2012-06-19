@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+filebase=`basename "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS"`
+#zenity --info --text="Filesall: $filebase"
+#dex2jar=`` 1>>"$temp" 2>&1
+#echo -n $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS
+alias dex2jar='sh "/media/Rushyang/Study Hard !!/DecompileAPK!/dex2jar-0.0.9.8/dex2jar.sh"'
+dex2jar "$filebase" & 1>>"$temp" 2>&1
+[[ -s "$temp" ]] && zenity --text-info --filename="$temp" --title="Error log for $base" --width=600 --height=600

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Code Developed By: Rushyang Darji
+# Initial Build: 29.03.2011
+# Last Updated: 23.04.2011
+# Prerequisites: zenity, JDK. 
+# I created this script when I was working on servlets & I found myself very lazy to go into terminal and compile everytime.
+# ~/.source4servlet file contains the commands to export the environment variable for JAVA_HOME, JRE_HOME & CLASSPATH
+
+source "/home/rushyang/.source4servlet"
+temp=$(mktemp)
+trap "rm $temp" 0 1 2
+if [[ ! -z $NAUTILUS_SCRIPT_SELECTED_URIS ]]; then
+	for uri in $NAUTILUS_SCRIPT_SELECTED_URIS; do
+		base=`basename "$uri"`
+		javac "$base" 2> $temp | zenity --progress --pulsate --auto-close --text="Compiling $base..." --title="$base" --width=250 --height=125 
+		[[ -s "$temp" ]] && zenity --text-info --filename="$temp" --title="Error log for $base" --width=600 --height=600
+	done
+else
+	#Making array of jfiles, containing all java files name inside it `find . -maxdepth 1 -print0 -name "*.java"`
+	#jfiles=()
+	#while read -r -d $'\0'; do
+	#	jfiles+=("$REPLY")
+	#done < <(ls *.java)
+	jfiles=`ls *.java`
+	[[ -z "$jfiles" ]] && zenity --error --text="No Java files were found in current working directory!" --no-wrap && exit
+	for i in *.java; do
+		javac "$i" 2> $temp | zenity --progress --pulsate --auto-close --text="Compiling $i..." --title="$i" --width=250 --height=125 
+		[[ -s "$temp" ]] && zenity --text-info --filename="$temp" --title="Error log for $i" --width=600 --height=600
+	done
+	
+fi

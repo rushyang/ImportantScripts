@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+base="`echo $NAUTILUS_SCRIPT_CURRENT_URI | cut -d'/' -f3- | sed 's/%20/ /g'`"
+if [ -z "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" ]; then
+dir="$base/"
+else
+while [ ! -z "$1" -a ! -d "$base/$1" ]; do shift; done
+dir="$base/$1/"
+fi
+
+while true; do
+	targetfile=`zenity --entry --text="Enter the file name: " --title="Initiating Open Gedit Here Script.." --width=400`
+	[[ -z "$targetfile" ]] && exit
+	geditfile="$base/$targetfile"
+	[[ -f "$geditfile" ]] && dup=`zenity --question --text="This file already exists, Are you sure you want to continue?" --width=500; echo $?`
+	[[ "$dup" -ne "1" ]] && break
+done
+
+gedit "$geditfile" &

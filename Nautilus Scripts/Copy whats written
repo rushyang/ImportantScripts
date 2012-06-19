@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# This script will copy whats written in enterybox, very useful to avoid loosing short term memories. :P
+
+copythis=`zenity --entry --text="Enter the file name: " --title="Initiating Copy whats written script.." --width=600`
+echo -n "$copythis" | xclip -selection clipboard
